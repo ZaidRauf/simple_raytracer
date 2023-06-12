@@ -6,6 +6,16 @@ ImageBuffer::ImageBuffer(const float width, const float height) : image_width(wi
     RGBA_Color *img_buf_data = image_buffer.get();
     for(auto i = 0; i < image_width * image_height; i++){
         img_buf_data[i] = BACKGROUND_WHITE;
+
+        // if(i % 3 == 0){
+        //     img_buf_data[i] = 0xFF0000FF;
+        // }
+        // else if(i % 3 == 1){
+        //     img_buf_data[i] = 0x00FF00FF;
+        // }
+        // else if(i % 3 == 2){
+        //     img_buf_data[i] = 0x0000FFFF;
+        // }
     }
 }
 
@@ -37,6 +47,9 @@ void ImageBuffer::DumpBuffer(const std::string &filename){
     file.open(filename);
 
     RGBA_Color *img_buf_data = image_buffer.get();
+
+    file << "Width: " << image_width << std::endl;
+    file << "Height: " << image_height << std::endl;
 
     for(auto i = 0; i < image_width * image_height; i++){
         file << img_buf_data[i] << std::endl;

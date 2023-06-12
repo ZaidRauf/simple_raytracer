@@ -7,7 +7,7 @@ int main(){
     // Direction is assumed to be looking down positive Z axis
     const Vector3 camera_pos = Vector3(0, 0, 0);
 
-    ImageBuffer img_buf{512, 512};
+    ImageBuffer img_buf{64, 64};
 
     img_buf.DumpBuffer("img");
     return 0;
