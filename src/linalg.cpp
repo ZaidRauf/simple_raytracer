@@ -36,3 +36,14 @@ Vector3 operator*(const float s, const Vector3 &v){
 Vector3 operator*(const Vector3 &v, const float s){
     return Vector3(s * v.x, s * v.y, s * v.z);
 }
+
+// Vector3 Unary Subtraction
+Vector3 operator-(const Vector3 &v){
+    return Vector3(-v.x, -v.y, -v.z);
+}
+
+// Print Vector3
+std::ostream& operator<<(std::ostream &os, const Vector3 &v){
+    os << "Vector3: " << "X: " << v.x << "Y: " << v.y << "Z: " << v.z << std::endl;
+    return os;
+}

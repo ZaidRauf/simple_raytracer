@@ -65,6 +65,12 @@ int main(){
                 }
 
                 if(t_closest < t_max){
+                    // auto full_vec = (t_closest * world_viewport_point);
+                    // float full_vec_len_sqr = full_vec * full_vec;
+                    // std::cout << x << " " << y << " " << sqrt(full_vec_len_sqr) << std::endl; 
+                    // std::cout << full_vec.x << " " << full_vec.y << " " <<  full_vec.z << std::endl; 
+                    // float adj_color = ((float)0xFF / full_vec_len_sqr * 2);
+                    // img_buf.SetPixel(x, y, (((uint32_t)adj_color) << 24 | 0xFF));
                     img_buf.SetPixel(x, y, s.color);
                 }
 

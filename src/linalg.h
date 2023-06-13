@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ostream>
+
 // Vector3 Definitions
 struct Vector3 {
     Vector3();
@@ -24,3 +26,9 @@ Vector3 operator*(const float s, const Vector3 &v);
 
 // Vector3 Scalar Multiplication
 Vector3 operator*(const Vector3 &v, const float s);
+
+// Vector3 Unary Subtraction
+Vector3 operator-(const Vector3 &v);
+
+// Print Vector3
+std::ostream& operator<<(std::ostream &os, const Vector3 &v);
