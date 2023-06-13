@@ -24,7 +24,7 @@ Vector3 operator-(const Vector3 &a, const Vector3 &b){
 
 // Vector3 Dot Product
 float operator*(const Vector3 &a, const Vector3 &b){
-    return (a.x * b.x) + (a.y * b.y) + (a.z + b.z);
+    return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
 // Vector3 Scalar Multiplication

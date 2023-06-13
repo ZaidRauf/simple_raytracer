@@ -1,2 +1,2 @@
 all:
-	g++ src/*.cpp -o raytracer
+	g++ src/*.cpp -g -o raytracer
