@@ -8,8 +8,8 @@
 int main(){
     // Direction is assumed to be looking down positive Z axis
     const Vector3 camera_pos = Vector3(0, 0, 0);
-    const unsigned int image_width = 512;
-    const unsigned int image_height = 512;
+    const unsigned int image_width = 256;
+    const unsigned int image_height = 256;
 
     const int viewport_zero_x = -(image_width/2);
     const int viewport_zero_y = (image_height/2);
@@ -31,7 +31,8 @@ int main(){
     // Green Sphere
     spheres.emplace_back(Vector3{-2, 0, 4}, 1, 0x00FF00FF);
 
-    spheres.emplace_back(Vector3{0, -0.25, 3.25}, 1, 0xFFFF00FF);
+    // Yellow Sphere in front of Blue and Green and occluding Red
+    // spheres.emplace_back(Vector3{0, -0.25, 3.25}, 1.15, 0xFFFF00FF);
 
     for(auto y = 0; y < image_height; y++){
         for(auto x = 0; x < image_width; x++){

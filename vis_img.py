@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
 
-# f = open("img")
-
 with open('img', 'r') as f:
     width = int(f.readline().split(' ')[1].strip('\n'))
     height = int(f.readline().split(' ')[1].strip('\n'))
@@ -29,4 +27,3 @@ with open('img', 'r') as f:
 
     plt.imshow(img)
     plt.show()
-# f.close()
