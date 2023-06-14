@@ -4,12 +4,13 @@
 #include "imagebuffer.h"
 #include <vector>
 #include <cmath>
+#include <limits>
 
 int main(){
     // Direction is assumed to be looking down positive Z axis
     const Vector3 camera_pos = Vector3(0, 0, 0);
-    const unsigned int image_width = 256;
-    const unsigned int image_height = 256;
+    const unsigned int image_width = 512;
+    const unsigned int image_height = 512;
 
     const int viewport_zero_x = -(image_width/2);
     const int viewport_zero_y = (image_height/2);
@@ -41,9 +42,10 @@ int main(){
 
             Vector3 world_viewport_point = Vector3(viewport_width * (float)viewport_x/(float)image_width, viewport_height * (float)viewport_y/(float)image_height, viewport_z_dist);
 
-            float t_closest = 100000;
+            float t_closest = std::numeric_limits<float>::max();
             float t_min = 1;
-            float t_max = 100000;
+            float t_max = std::numeric_limits<float>::max();
+
             RGBA_Color computed_color = 0xFFFFFFFF;
 
             for(const auto &s : spheres){
