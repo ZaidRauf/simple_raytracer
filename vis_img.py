@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import cv2
+import numpy as np;
 
 with open('img', 'r') as f:
     width = int(f.readline().split(' ')[1].strip('\n'))
@@ -25,5 +27,13 @@ with open('img', 'r') as f:
 
         img.append(row_data)
 
-    plt.imshow(img)
-    plt.show()
+    np_img = np.array(img)
+
+    cv2.imwrite('output.png', np_img)
+    image = cv2.imread('output.png')
+    cv2.imshow('output', image)
+    cv2.waitKey()
+
+    # plt.axis("off")
+    # plt.imshow(img)
+    # plt.show()

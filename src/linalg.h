@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ostream>
+#include <cmath>
 
 // Vector3 Definitions
 struct Vector3 {
@@ -10,6 +11,8 @@ struct Vector3 {
     float y = 0;
     float z = 0;
     Vector3 operator=(const Vector3 &other);
+    float length();
+    Vector3 normalized();
 };
 
 // Vector3 Addition

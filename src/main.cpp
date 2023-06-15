@@ -1,23 +1,38 @@
-#include <iostream>
-#include "linalg.h"
-#include "sphere.h"
-#include "imagebuffer.h"
-#include <vector>
 #include <cmath>
 #include <limits>
+#include <vector>
+#include <algorithm>
+
+#include "imagebuffer.h"
+#include "linalg.h"
+#include "sphere.h"
+
+uint32_t compute_scaled_color(uint32_t color, float intensity){
+    auto color_red = (color >> 24) & 0xFF;
+    auto color_green = (color >> 16) & 0xFF;
+    auto color_blue = (color >> 8) & 0xFF;
+
+    color_red = color_red * intensity;
+    color_green = color_green * intensity;
+    color_blue = color_blue * intensity;
+
+    uint32_t shaded_color = (color_red << 24) | (color_green << 16) | (color_blue << 8) | 0xFF;
+
+    return shaded_color;
+}
 
 int main(){
     // Direction is assumed to be looking down positive Z axis
     const Vector3 camera_pos = Vector3(0, 0, 0);
-    const unsigned int image_width = 512;
-    const unsigned int image_height = 512;
+    const unsigned int image_width = 1920;
+    const unsigned int image_height = 1080;
 
     const int viewport_zero_x = -(image_width/2);
     const int viewport_zero_y = (image_height/2);
 
     ImageBuffer img_buf{image_width, image_height};
 
-    float viewport_width = 1;
+    float viewport_width = 1.77777777;
     float viewport_height = 1;
     float viewport_z_dist = 1;
 
@@ -35,6 +50,9 @@ int main(){
     // Yellow Sphere in front of Blue and Green and occluding Red
     // spheres.emplace_back(Vector3{0, -0.25, 3.25}, 1.15, 0xFFFF00FF);
 
+    Vector3 point_light{2, 1, 0};
+    float point_light_intensity = 0.6;
+
     for(auto y = 0; y < image_height; y++){
         for(auto x = 0; x < image_width; x++){
             int viewport_x = x + viewport_zero_x;
@@ -47,6 +65,7 @@ int main(){
             float t_max = std::numeric_limits<float>::max();
 
             RGBA_Color computed_color = 0xFFFFFFFF;
+            float intensity = 0.0;
 
             for(const auto &s : spheres){
                 bool closest_updated = false;
@@ -64,8 +83,8 @@ int main(){
                     continue;
                 }
 
-                float t1 = (-b + sqrt(disc)) / (2 * a);
-                float t2 = (-b - sqrt(disc)) / (2 * a);
+                float t1 = (-b + std::sqrt(disc)) / (2 * a);
+                float t2 = (-b - std::sqrt(disc)) / (2 * a);
 
                 if(t1 >= t_min && t1 <= t_max && t1 <= t_closest){
                     t_closest = t1;
@@ -78,7 +97,16 @@ int main(){
                 }
 
                 if(closest_updated){
-                    computed_color = s.color;
+                    Vector3 sphere_point = (t_closest * world_viewport_point);
+
+                    Vector3 sphere_normal = (sphere_point - s.origin).normalized();
+                    Vector3 light_dir_normal = (point_light - sphere_point).normalized();
+
+                    float point_light_dist = (point_light - sphere_point).length();
+                    auto point_light_dist_squared = point_light_dist * point_light_dist;
+
+                    intensity += std::clamp((float) ((sphere_normal * light_dir_normal) * 0.6), (float)0.0, (float)1.0);
+                    computed_color = compute_scaled_color(s.color, intensity);
                 }
 
             }
