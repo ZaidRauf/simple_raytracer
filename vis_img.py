@@ -29,11 +29,11 @@ with open('img', 'r') as f:
 
     np_img = np.array(img)
 
-    cv2.imwrite('output.png', np_img)
-    image = cv2.imread('output.png')
-    cv2.imshow('output', image)
-    cv2.waitKey()
+    # cv2.imwrite('output.png', np_img)
+    # image = cv2.imread('output.png')
+    # cv2.imshow('output', image)
+    # cv2.waitKey()
 
     # plt.axis("off")
-    # plt.imshow(img)
-    # plt.show()
+    plt.imshow(img)
+    plt.show()
