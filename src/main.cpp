@@ -15,9 +15,9 @@ uint32_t compute_scaled_color(uint32_t color, float intensity){
     auto color_green = (color >> 16) & 0xFF;
     auto color_blue = (color >> 8) & 0xFF;
 
-    color_red = std::clamp((int) (color_red * intensity), 0, 255);
-    color_green = std::clamp((int) (color_green * intensity), 0, 255);
-    color_blue = std::clamp((int) (color_blue * intensity), 0, 255);
+    color_red = std::clamp((unsigned int) (color_red * intensity), (unsigned int)0, (unsigned int)255);
+    color_green = std::clamp((unsigned int) (color_green * intensity), (unsigned int)0, (unsigned int)255);
+    color_blue = std::clamp((unsigned int) (color_blue * intensity), (unsigned int)0, (unsigned int)255);
 
     // color_green = (color_green * intensity);
     // color_blue = color_blue * intensity;
@@ -116,7 +116,10 @@ int main(){
                     Vector3 reflection_vector = ((2 * (sphere_normal * (sphere_normal * light_dir_normal))) - light_dir_normal).normalized();
 
                     intensity += std::clamp((float) ((sphere_normal * light_dir_normal) * 0.6), (float)0.0, (float)1.0);
-                    intensity += std::clamp((float) (std::pow(view_vector * reflection_vector, 500) * 0.6), (float)0.0, (float)1.0);
+
+                    if((view_vector * reflection_vector) > 0){
+                        intensity += std::clamp((float) (std::pow(view_vector * reflection_vector, 500) * 0.6), (float)0.0, (float)1.0);
+                    }
 
                     computed_color = compute_scaled_color(s.color, intensity);
                 }
