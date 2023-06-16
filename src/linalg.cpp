@@ -49,10 +49,10 @@ std::ostream& operator<<(std::ostream &os, const Vector3 &v){
 }
 
 // Sqrt of dot product with self is length
-float Vector3::length(){
+float Vector3::length() const{
     return std::sqrt((*this) * (*this));
 }
 
-Vector3 Vector3::normalized(){
+Vector3 Vector3::normalized() const{
     return (1/this->length()) * (*this);
 }

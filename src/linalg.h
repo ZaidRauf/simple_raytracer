@@ -11,8 +11,8 @@ struct Vector3 {
     float y = 0;
     float z = 0;
     Vector3 operator=(const Vector3 &other);
-    float length();
-    Vector3 normalized();
+    float length() const;
+    Vector3 normalized() const;
 };
 
 // Vector3 Addition

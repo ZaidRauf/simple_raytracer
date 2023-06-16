@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "imagebuffer.h"
+#include "light.h"
 #include "linalg.h"
 #include "sphere.h"
 
@@ -19,33 +20,12 @@ uint32_t compute_scaled_color(uint32_t color, float intensity){
     color_green = std::clamp((unsigned int) (color_green * intensity), (unsigned int)0, (unsigned int)255);
     color_blue = std::clamp((unsigned int) (color_blue * intensity), (unsigned int)0, (unsigned int)255);
 
-    // color_green = (color_green * intensity);
-    // color_blue = color_blue * intensity;
-
     uint32_t shaded_color = (color_red << 24) | (color_green << 16) | (color_blue << 8) | 0xFF;
 
     return shaded_color;
 }
 
-int main(){
-    // Direction is assumed to be looking down positive Z axis
-    const Vector3 camera_pos = Vector3(0, 0, 0);
-    const unsigned int image_width = 512;
-    const unsigned int image_height = 512;
-    // const unsigned int image_width = 1920;
-    // const unsigned int image_height = 1080;
-
-
-    const int viewport_zero_x = -(image_width/2);
-    const int viewport_zero_y = (image_height/2);
-
-    ImageBuffer img_buf{image_width, image_height};
-
-    // float viewport_width = 1.77777777;
-    float viewport_width = 1;
-    float viewport_height = 1;
-    float viewport_z_dist = 1;
-
+std::vector<Sphere> build_sphere_vec(){
     std::vector<Sphere> spheres;
 
     // Red Sphere
@@ -57,11 +37,32 @@ int main(){
     // Green Sphere
     spheres.emplace_back(Vector3{-2, 0, 4}, 1, 0x00FF00FF);
 
-    // Yellow Sphere in front of Blue and Green and occluding Red
-    // spheres.emplace_back(Vector3{0, -0.25, 3.25}, 1.15, 0xFFFF00FF);
+    // Large Yellow Sphere acting as ground
+    spheres.emplace_back(Vector3{0, -5001, 0}, 5000, 0xFFFF00FF);
 
-    Vector3 point_light{2, 1, 0};
-    float point_light_intensity = 0.6;
+    return spheres;
+}
+
+int main(){
+    // Direction is assumed to be looking down positive Z axis
+    const Vector3 camera_pos = Vector3(0, 0, 0);
+    const unsigned int image_width = 512;
+    const unsigned int image_height = 512;
+
+    const int viewport_zero_x = -(image_width/2);
+    const int viewport_zero_y = (image_height/2);
+
+    ImageBuffer img_buf{image_width, image_height};
+
+    float viewport_width = 1;
+    float viewport_height = 1;
+    float viewport_z_dist = 1;
+
+    std::vector<Sphere> spheres = build_sphere_vec();
+
+    std::vector<std::unique_ptr<Light>> lights;
+    lights.emplace_back(new PointLight{0.7, 0.05, {2, 1, 0}});
+    lights.emplace_back(new DirectionLight{0.15, 0.0, {0, -1, 0}});
 
     for(auto y = 0; y < image_height; y++){
         for(auto x = 0; x < image_width; x++){
@@ -70,12 +71,9 @@ int main(){
 
             Vector3 world_viewport_point = Vector3(viewport_width * (float)viewport_x/(float)image_width, viewport_height * (float)viewport_y/(float)image_height, viewport_z_dist);
 
-            // float t_closest = std::numeric_limits<float>::max();
-            float t_min = 1;
-            // float t_max = std::numeric_limits<float>::max();
-
+            constexpr float t_min = 1;
             RGBA_Color computed_color = 0xFFFFFFFF;
-            // computed_color = (1 << 24) | (129 << 16) | (127 << 8) | 0xFF;
+            computed_color = (1 << 24) | (129 << 16) | (127 << 8) | 0xFF;
 
             float intensity = 0.0;
 
@@ -93,17 +91,10 @@ int main(){
 
             if(closest_sphere != nullptr){
                 Vector3 sphere_point = (t_closest * world_viewport_point);
-
                 Vector3 sphere_normal = (sphere_point - closest_sphere->origin).normalized();
-                Vector3 light_dir_normal = (point_light - sphere_point).normalized();
-
-                Vector3 view_vector = (camera_pos - sphere_point).normalized();
-                Vector3 reflection_vector = ((2 * (sphere_normal * (sphere_normal * light_dir_normal))) - light_dir_normal).normalized();
-
-                intensity += std::clamp((float) ((sphere_normal * light_dir_normal) * 0.6), (float)0.0, (float)1.0);
-
-                if((view_vector * reflection_vector) > 0){
-                    intensity += std::clamp((float) (std::pow(view_vector * reflection_vector, 500) * 0.6), (float)0.0, (float)1.0);
+                
+                for(const auto &l : lights){
+                    intensity += l->compute_intensity(sphere_point, sphere_normal, camera_pos, 500);
                 }
 
                 computed_color = compute_scaled_color(closest_sphere->color, intensity);
