@@ -11,14 +11,14 @@ float PointLight::compute_intensity(const Vector3 &point, const Vector3 &point_n
 
     // Diffuse Term Calculation
     Vector3 light_dir_normal = (this->position - point).normalized();
-    intensity += std::max((float) ((point_normal * light_dir_normal) * this->light_intensity), (float)0.0);
+    intensity += std::max(static_cast<float>((point_normal * light_dir_normal) * this->light_intensity), static_cast<float>(0.0));
 
     // Specular Term Calculation
     Vector3 view_vector = (camera_pos - point).normalized();
     Vector3 reflection_vector = ((2 * (point_normal * (point_normal * light_dir_normal))) - light_dir_normal).normalized();
 
     if((view_vector * reflection_vector) > 0){
-        intensity += std::max((float) (std::pow(view_vector * reflection_vector, specular_alpha) * this->light_intensity), (float)0.0);
+        intensity += std::max(static_cast<float>(std::pow(view_vector * reflection_vector, specular_alpha) * this->light_intensity), static_cast<float>(0.0));
     }
 
     auto light_distance_vec = point-this->position;
@@ -37,14 +37,14 @@ float DirectionLight::compute_intensity(const Vector3 &point, const Vector3 &poi
 
     // Diffuse Term Calculation
     Vector3 light_dir_normal = -this->direction;
-    intensity += std::max((float) ((point_normal * light_dir_normal) * this->light_intensity), (float)0.0);
+    intensity += std::max(static_cast<float>((point_normal * light_dir_normal) * this->light_intensity), static_cast<float>(0.0));
 
     // Specular Term Calculation
     Vector3 view_vector = (camera_pos - point).normalized();
     Vector3 reflection_vector = ((2 * (point_normal * (point_normal * light_dir_normal))) - light_dir_normal).normalized();
 
     if((view_vector * reflection_vector) > 0){
-        intensity += std::max((float) (std::pow(view_vector * reflection_vector, specular_alpha) * this->light_intensity), (float)0.0);
+        intensity += std::max(static_cast<float>(std::pow(view_vector * reflection_vector, specular_alpha) * this->light_intensity), static_cast<float>(0.0));
     }
 
     // Light assumed to be at infinity so no need to attenuate by distance as majority light fall off has ocurred

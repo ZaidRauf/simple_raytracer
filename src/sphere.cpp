@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-Sphere::Sphere(const Vector3 &o, const float r, const uint32_t c) : origin(o), radius(r), color(c){};
+Sphere::Sphere(const Vector3 &o, const float r, const uint32_t c, const float spec_alpha) : origin(o), radius(r), color(c), specular_alpha(spec_alpha){};
 
 float Sphere::compute_intersection(const float t_min, const Vector3 &camera_pos, const Vector3 &world_viewport_point) const {
     constexpr float t_max = std::numeric_limits<float>::max();

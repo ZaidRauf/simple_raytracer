@@ -29,18 +29,28 @@ std::vector<Sphere> build_sphere_vec(){
     std::vector<Sphere> spheres;
 
     // Red Sphere
-    spheres.emplace_back(Vector3{0, -1, 3}, 1, 0xFF0000FF);
+    spheres.emplace_back(Vector3{0, -1, 3}, 1, 0xFF0000FF, 500);
 
     // Blue Sphere
-    spheres.emplace_back(Vector3{2, 0, 4}, 1, 0x0000FFFF);
+    spheres.emplace_back(Vector3{2, 0, 4}, 1, 0x0000FFFF, 500);
 
     // Green Sphere
-    spheres.emplace_back(Vector3{-2, 0, 4}, 1, 0x00FF00FF);
+    spheres.emplace_back(Vector3{-2, 0, 4}, 1, 0x00FF00FF, 10);
 
     // Large Yellow Sphere acting as ground
-    spheres.emplace_back(Vector3{0, -5001, 0}, 5000, 0xFFFF00FF);
+    spheres.emplace_back(Vector3{0, -5001, 0}, 5000, 0xFFFF00FF, 1000);
 
     return spheres;
+}
+
+std::vector<std::unique_ptr<Light>> build_light_vec(){
+    std::vector<std::unique_ptr<Light>> lights;
+
+    lights.emplace_back(new PointLight{0.7, 0.05, {2, 1, 0}});
+
+    lights.emplace_back(new DirectionLight{0.15, 0.0, {0, -1, 0}});
+
+    return lights;
 }
 
 int main(){
@@ -59,10 +69,7 @@ int main(){
     float viewport_z_dist = 1;
 
     std::vector<Sphere> spheres = build_sphere_vec();
-
-    std::vector<std::unique_ptr<Light>> lights;
-    lights.emplace_back(new PointLight{0.7, 0.05, {2, 1, 0}});
-    lights.emplace_back(new DirectionLight{0.15, 0.0, {0, -1, 0}});
+    std::vector<std::unique_ptr<Light>> lights = build_light_vec();
 
     for(auto y = 0; y < image_height; y++){
         for(auto x = 0; x < image_width; x++){
@@ -94,7 +101,7 @@ int main(){
                 Vector3 sphere_normal = (sphere_point - closest_sphere->origin).normalized();
                 
                 for(const auto &l : lights){
-                    intensity += l->compute_intensity(sphere_point, sphere_normal, camera_pos, 500);
+                    intensity += l->compute_intensity(sphere_point, sphere_normal, camera_pos, closest_sphere->specular_alpha);
                 }
 
                 computed_color = compute_scaled_color(closest_sphere->color, intensity);
