@@ -32,6 +32,9 @@ int main(){
     const Vector3 camera_pos = Vector3(0, 0, 0);
     const unsigned int image_width = 512;
     const unsigned int image_height = 512;
+    // const unsigned int image_width = 1920;
+    // const unsigned int image_height = 1080;
+
 
     const int viewport_zero_x = -(image_width/2);
     const int viewport_zero_y = (image_height/2);
@@ -67,63 +70,43 @@ int main(){
 
             Vector3 world_viewport_point = Vector3(viewport_width * (float)viewport_x/(float)image_width, viewport_height * (float)viewport_y/(float)image_height, viewport_z_dist);
 
-            float t_closest = std::numeric_limits<float>::max();
+            // float t_closest = std::numeric_limits<float>::max();
             float t_min = 1;
-            float t_max = std::numeric_limits<float>::max();
+            // float t_max = std::numeric_limits<float>::max();
 
             RGBA_Color computed_color = 0xFFFFFFFF;
+            // computed_color = (1 << 24) | (129 << 16) | (127 << 8) | 0xFF;
+
             float intensity = 0.0;
 
+            float t_closest = std::numeric_limits<float>::max();
+            const Sphere *closest_sphere = nullptr;
+
             for(const auto &s : spheres){
-                bool closest_updated = false;
+                float t_intersection = s.compute_intersection(t_min, camera_pos, world_viewport_point);
 
-                auto r = s.radius;
-                auto co = camera_pos - s.origin;
+                if(t_intersection < t_closest){
+                    t_closest = t_intersection;
+                    closest_sphere = &s;
+                }
+            }
 
-                float a = world_viewport_point * world_viewport_point;
-                float b = 2 * (co * world_viewport_point);
-                float c = (co * co) - r*r;
+            if(closest_sphere != nullptr){
+                Vector3 sphere_point = (t_closest * world_viewport_point);
 
-                float disc = b*b - 4*a*c;
+                Vector3 sphere_normal = (sphere_point - closest_sphere->origin).normalized();
+                Vector3 light_dir_normal = (point_light - sphere_point).normalized();
 
-                if(disc < 0){
-                    continue;
+                Vector3 view_vector = (camera_pos - sphere_point).normalized();
+                Vector3 reflection_vector = ((2 * (sphere_normal * (sphere_normal * light_dir_normal))) - light_dir_normal).normalized();
+
+                intensity += std::clamp((float) ((sphere_normal * light_dir_normal) * 0.6), (float)0.0, (float)1.0);
+
+                if((view_vector * reflection_vector) > 0){
+                    intensity += std::clamp((float) (std::pow(view_vector * reflection_vector, 500) * 0.6), (float)0.0, (float)1.0);
                 }
 
-                float t1 = (-b + std::sqrt(disc)) / (2 * a);
-                float t2 = (-b - std::sqrt(disc)) / (2 * a);
-
-                if(t1 >= t_min && t1 <= t_max && t1 <= t_closest){
-                    t_closest = t1;
-                    closest_updated = true;
-                }
-
-                if(t2 >= t_min && t2 <= t_max && t2 <= t_closest){
-                    t_closest = t2;
-                    closest_updated = true;
-                }
-
-                if(closest_updated){
-                    Vector3 sphere_point = (t_closest * world_viewport_point);
-
-                    Vector3 sphere_normal = (sphere_point - s.origin).normalized();
-                    Vector3 light_dir_normal = (point_light - sphere_point).normalized();
-
-                    // float point_light_dist = (point_light - sphere_point).length();
-                    // auto point_light_dist_squared = point_light_dist * point_light_dist;
-
-                    Vector3 view_vector = (camera_pos - sphere_point).normalized();
-                    Vector3 reflection_vector = ((2 * (sphere_normal * (sphere_normal * light_dir_normal))) - light_dir_normal).normalized();
-
-                    intensity += std::clamp((float) ((sphere_normal * light_dir_normal) * 0.6), (float)0.0, (float)1.0);
-
-                    if((view_vector * reflection_vector) > 0){
-                        intensity += std::clamp((float) (std::pow(view_vector * reflection_vector, 500) * 0.6), (float)0.0, (float)1.0);
-                    }
-
-                    computed_color = compute_scaled_color(s.color, intensity);
-                }
-
+                computed_color = compute_scaled_color(closest_sphere->color, intensity);
             }
 
             img_buf.SetPixel(x, y, computed_color);

@@ -6,6 +6,7 @@ ImageBuffer::ImageBuffer(const float width, const float height) : image_width(wi
     RGBA_Color *img_buf_data = image_buffer.get();
     for(auto i = 0; i < image_width * image_height; i++){
         img_buf_data[i] = BACKGROUND_WHITE;
+        // img_buf_data[i] = (1 << 24) | (129 << 16) | (127 << 8) | 0xFF;
     }
 }
 

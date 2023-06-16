@@ -23,7 +23,9 @@ with open('img', 'r') as f:
 
         for col in range(width):
             idx = col + (row * width)
-            row_data.append(img_data[idx])
+            pixel = img_data[idx]
+            # pixel.reverse() // Need to reverse when writing OpenCV PNGs
+            row_data.append(pixel)
 
         img.append(row_data)
 
