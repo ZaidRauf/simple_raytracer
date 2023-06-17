@@ -1,9 +1,8 @@
 #include "sphere.h"
 
-Sphere::Sphere(const Vector3 &o, const float r, const uint32_t c, const float spec_alpha) : origin(o), radius(r), color(c), specular_alpha(spec_alpha){};
+Sphere::Sphere(const Vector3 &o, const float r, const uint32_t c, const float spec_alpha, const float sphere_reflection) : origin(o), radius(r), color(c), specular_alpha(spec_alpha), reflection(sphere_reflection){};
 
-float Sphere::compute_intersection(const float t_min, const Vector3 &camera_pos, const Vector3 &world_viewport_point) const {
-    constexpr float t_max = std::numeric_limits<float>::max();
+float Sphere::compute_intersection(const float t_min, const float t_max, const Vector3 &camera_pos, const Vector3 &world_viewport_point) const {
     float t_closest = std::numeric_limits<float>::max();
 
     auto r = this->radius;

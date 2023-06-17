@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import cv2
 import numpy as np;
 
@@ -24,18 +23,11 @@ with open('img', 'r') as f:
         for col in range(width):
             idx = col + (row * width)
             pixel = img_data[idx]
-            # pixel.reverse() # Need to reverse when writing OpenCV PNGs
+            pixel.reverse() # Need to reverse when writing OpenCV PNGs
             row_data.append(pixel)
 
         img.append(row_data)
 
     np_img = np.array(img)
 
-    # cv2.imwrite('output.png', np_img)
-    # image = cv2.imread('output.png')
-    # cv2.imshow('output', image)
-    # cv2.waitKey()
-
-    # plt.axis("off")
-    plt.imshow(img)
-    plt.show()
+    cv2.imwrite('output.png', np_img)

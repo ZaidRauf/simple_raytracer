@@ -44,7 +44,7 @@ Vector3 operator-(const Vector3 &v){
 
 // Print Vector3
 std::ostream& operator<<(std::ostream &os, const Vector3 &v){
-    os << "Vector3: " << "X: " << v.x << "Y: " << v.y << "Z: " << v.z << std::endl;
+    os << "Vector3: " << "X: " << v.x << " Y: " << v.y << " Z: " << v.z << std::endl;
     return os;
 }
 
