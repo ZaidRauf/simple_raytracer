@@ -114,7 +114,7 @@ int main(){
 
     ImageBuffer img_buf{image_width, image_height};
 
-    const float viewport_width = 1.3333333333;
+    const float viewport_width = 1.3333333333; // This is image_width/image_height
     const float viewport_height = 1;
     const float viewport_z_dist = 1;
 

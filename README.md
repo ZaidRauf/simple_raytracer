@@ -1,6 +1,13 @@
 # Simple Raytracer
 
-A simple software ray tracer written in C++, can draw spheres with varying reflectivity and shinyness, with shadows for different light sources.
+![A Demo Image for the Ray Tracer](./demo.png)
+
+A small simple software ray tracer written in C++, can draw spheres with varying reflectivity and shinyness, with shadows for different light sources. Outputs the image as a .tga file.
+
+Tried to use modern C++ features when possible. Scene information, image size, etc is hardcoded in main.cpp.
+
+## To Build On Linux
+Can just run `make` in the root folder and run the resulting binary with `./raytracer`
 
 ## References
 
