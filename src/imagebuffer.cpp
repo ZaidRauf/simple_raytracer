@@ -6,8 +6,9 @@ ImageBuffer::ImageBuffer(const float width, const float height) : image_width(wi
     RGBA_Color *img_buf_data = image_buffer.get();
     for(auto i = 0; i < image_width * image_height; i++){
         img_buf_data[i] = BACKGROUND_WHITE;
-        // img_buf_data[i] = (1 << 24) | (129 << 16) | (127 << 8) | 0xFF;
     }
+
+    return;
 }
 
 
@@ -47,6 +48,8 @@ void ImageBuffer::dump_buffer(const std::string &filename){
     }
 
     file.close();
+
+    return;
 }
 
 const bool ImageBuffer::check_little_endian(){
@@ -74,16 +77,24 @@ void ImageBuffer::write_tga(const std::string &filename){
     }
 
     // Image Specification
-    uint16_t x_origin = 0x0000;
-    f.sputn(reinterpret_cast<char*>(&x_origin), sizeof(uint16_t));
+    constexpr uint16_t x_origin = 0x0000;
+    f.sputn(reinterpret_cast<const char*>(&x_origin), sizeof(uint16_t));
 
-    uint16_t y_origin = 0x0000;
-    f.sputn(reinterpret_cast<char*>(&y_origin), sizeof(uint16_t));
+    constexpr uint16_t y_origin = 0x0000;
+    f.sputn(reinterpret_cast<const char*>(&y_origin), sizeof(uint16_t));
 
     uint16_t img_width = this->image_width;
+    if(!is_little_endian){
+        img_width = (img_width << 8) | (img_width >> 8);
+    }
+
     f.sputn(reinterpret_cast<char*>(&img_width), sizeof(uint16_t));
 
     uint16_t img_height = this->image_height;
+    if(!is_little_endian){
+        img_width = (img_height << 8) | (img_height >> 8);
+    }
+
     f.sputn(reinterpret_cast<char*>(&img_height), sizeof(uint16_t));
 
     // Bit Depth (32 Bits)
@@ -93,14 +104,22 @@ void ImageBuffer::write_tga(const std::string &filename){
     f.sputc(0b00101000);
 
     // Image ID field and Color Map data are skipped
-    // Color Data
+    0xABCD;
+    0xDCBA;
 
+    // Color Data
     RGBA_Color *img_buf_data = image_buffer.get();
     for(auto i = 0; i < image_width * image_height; i++){
         RGBA_Color orig =  img_buf_data[i];
+        if(!is_little_endian){
+            img_width = (orig << 24) | ((orig << 8) & 0x00FF0000) | (orig >> 24) | ((orig >> 8) & 0x0000FF00);
+        }
+
         uint32_t argb_color = (orig << 24) | (orig >> 8);
         f.sputn(reinterpret_cast<char*>(&argb_color), sizeof(uint32_t));
     }
 
     f.close();
+
+    return;
 }
