@@ -77,35 +77,35 @@ void ImageBuffer::write_tga(const std::string &filename){
     }
 
     // Image Specification
-    constexpr uint16_t x_origin = 0x0000;
-    f.sputn(reinterpret_cast<const char*>(&x_origin), sizeof(uint16_t));
+    constexpr std::uint16_t x_origin = 0x0000;
+    f.sputn(reinterpret_cast<const char*>(&x_origin), sizeof(std::uint16_t));
 
-    constexpr uint16_t y_origin = 0x0000;
-    f.sputn(reinterpret_cast<const char*>(&y_origin), sizeof(uint16_t));
+    constexpr std::uint16_t y_origin = 0x0000;
+    f.sputn(reinterpret_cast<const char*>(&y_origin), sizeof(std::uint16_t));
 
-    uint16_t img_width = this->image_width;
+    std::uint16_t img_width = this->image_width;
     if(!is_little_endian){
         img_width = (img_width << 8) | (img_width >> 8);
     }
 
-    f.sputn(reinterpret_cast<char*>(&img_width), sizeof(uint16_t));
+    f.sputn(reinterpret_cast<char*>(&img_width), sizeof(std::uint16_t));
 
-    uint16_t img_height = this->image_height;
+    std::uint16_t img_height = this->image_height;
     if(!is_little_endian){
         img_width = (img_height << 8) | (img_height >> 8);
     }
 
-    f.sputn(reinterpret_cast<char*>(&img_height), sizeof(uint16_t));
+    f.sputn(reinterpret_cast<char*>(&img_height), sizeof(std::uint16_t));
 
     // Bit Depth (32 Bits)
     f.sputc(0x20);
 
     // Image Descriptor Byte
+    // Least significant byte indicates we have 8 bit pixels
+    // Most significant byte bit 1 indicates image startes from top left
     f.sputc(0b00101000);
 
     // Image ID field and Color Map data are skipped
-    0xABCD;
-    0xDCBA;
 
     // Color Data
     RGBA_Color *img_buf_data = image_buffer.get();
@@ -115,8 +115,8 @@ void ImageBuffer::write_tga(const std::string &filename){
             img_width = (orig << 24) | ((orig << 8) & 0x00FF0000) | (orig >> 24) | ((orig >> 8) & 0x0000FF00);
         }
 
-        uint32_t argb_color = (orig << 24) | (orig >> 8);
-        f.sputn(reinterpret_cast<char*>(&argb_color), sizeof(uint32_t));
+        std::uint32_t argb_color = (orig << 24) | (orig >> 8);
+        f.sputn(reinterpret_cast<char*>(&argb_color), sizeof(std::uint32_t));
     }
 
     f.close();

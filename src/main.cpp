@@ -9,7 +9,7 @@
 #include "linalg.h"
 #include "sphere.h"
 
-uint32_t blend_color(uint32_t color1, uint32_t color2, float blend){
+std::uint32_t blend_color(std::uint32_t color1, std::uint32_t color2, float blend){
     auto color1_red = (color1 >> 24) & 0xFF;
     auto color1_green = (color1 >> 16) & 0xFF;
     auto color1_blue = (color1 >> 8) & 0xFF;
@@ -18,25 +18,25 @@ uint32_t blend_color(uint32_t color1, uint32_t color2, float blend){
     auto color2_green = (color2 >> 16) & 0xFF;
     auto color2_blue = (color2 >> 8) & 0xFF;
 
-    auto color_red = std::clamp((unsigned int) (color1_red * (1 - blend) + color2_red * blend), (unsigned int)0, (unsigned int)255);
-    auto color_green = std::clamp((unsigned int) (color1_green * (1 - blend) + color2_green * blend), (unsigned int)0, (unsigned int)255);
-    auto color_blue = std::clamp((unsigned int) (color1_blue * (1 - blend) + color2_blue * blend), (unsigned int)0, (unsigned int)255);
+    auto color_red = std::clamp(static_cast<unsigned int>((color1_red * (1 - blend) + color2_red * blend)), static_cast<unsigned int>(0), static_cast<unsigned int>(255));
+    auto color_green = std::clamp(static_cast<unsigned int>((color1_green * (1 - blend) + color2_green * blend)), static_cast<unsigned int>(0), static_cast<unsigned int>(255));
+    auto color_blue = std::clamp(static_cast<unsigned int>((color1_blue * (1 - blend) + color2_blue * blend)), static_cast<unsigned int>(0), static_cast<unsigned int>(255));
 
-    uint32_t blended_color = (color_red << 24) | (color_green << 16) | (color_blue << 8) | 0xFF;
+    std::uint32_t blended_color = (color_red << 24) | (color_green << 16) | (color_blue << 8) | 0xFF;
 
     return blended_color;
 }
 
-uint32_t compute_scaled_color(uint32_t color, float intensity){
+std::uint32_t compute_scaled_color(std::uint32_t color, float intensity){
     auto color_red = (color >> 24) & 0xFF;
     auto color_green = (color >> 16) & 0xFF;
     auto color_blue = (color >> 8) & 0xFF;
 
-    color_red = std::clamp((unsigned int) (color_red * intensity), (unsigned int)0, (unsigned int)255);
-    color_green = std::clamp((unsigned int) (color_green * intensity), (unsigned int)0, (unsigned int)255);
-    color_blue = std::clamp((unsigned int) (color_blue * intensity), (unsigned int)0, (unsigned int)255);
+    color_red = std::clamp(static_cast<unsigned int>((color_red * intensity)), static_cast<unsigned int>(0), static_cast<unsigned int>(255));
+    color_green = std::clamp(static_cast<unsigned int>((color_green * intensity)), static_cast<unsigned int>(0), static_cast<unsigned int>(255));
+    color_blue = std::clamp(static_cast<unsigned int>((color_blue * intensity)), static_cast<unsigned int>(0), static_cast<unsigned int>(255));
 
-    uint32_t shaded_color = (color_red << 24) | (color_green << 16) | (color_blue << 8) | 0xFF;
+    std::uint32_t shaded_color = (color_red << 24) | (color_green << 16) | (color_blue << 8) | 0xFF;
 
     return shaded_color;
 }
@@ -69,7 +69,7 @@ std::vector<std::unique_ptr<Light>> build_light_vec(){
     return lights;
 }
 
-uint32_t reflective_ray_color_blend(const int depth, const Vector3 &incoming_ray, const Vector3 &point_normal, const Vector3 &point, const uint32_t current_color, const float blend_coef, const std::vector<Sphere> &spheres, const std::vector<std::unique_ptr<Light>> &lights){
+std::uint32_t reflective_ray_color_blend(const int depth, const Vector3 &incoming_ray, const Vector3 &point_normal, const Vector3 &point, const std::uint32_t current_color, const float blend_coef, const std::vector<Sphere> &spheres, const std::vector<std::unique_ptr<Light>> &lights){
     if(depth <= 0){
         return current_color;
     }
@@ -91,7 +91,7 @@ uint32_t reflective_ray_color_blend(const int depth, const Vector3 &incoming_ray
         }
     }
     
-    uint32_t blended_color = current_color;
+    std::uint32_t blended_color = current_color;
 
     if(closest_sphere != nullptr){
         Vector3 sphere_point = (t_closest * reflect_ray);
@@ -115,9 +115,9 @@ int main(){
 
     ImageBuffer img_buf{image_width, image_height};
 
-    float viewport_width = 1.3333333333;
-    float viewport_height = 1;
-    float viewport_z_dist = 1;
+    const float viewport_width = 1.3333333333;
+    const float viewport_height = 1;
+    const float viewport_z_dist = 1;
 
     std::vector<Sphere> spheres = build_sphere_vec();
     std::vector<std::unique_ptr<Light>> lights = build_light_vec();
@@ -133,6 +133,8 @@ int main(){
             constexpr float t_max = std::numeric_limits<float>::max();
 
             RGBA_Color computed_color = 0xFFFFFFFF;
+
+            // Uncomment if you want the background color to look greenish-cyan
             // computed_color = (1 << 24) | (129 << 16) | (127 << 8) | 0xFF;
 
             float t_closest = std::numeric_limits<float>::max();

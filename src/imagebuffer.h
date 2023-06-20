@@ -7,7 +7,7 @@
 #include <bit>
 
 // Of form RGBA where A is assumed to be 255;
-using RGBA_Color = uint32_t;
+using RGBA_Color = std::uint32_t;
 
 class ImageBuffer {
     public:

@@ -1,8 +1,13 @@
+all:
+	g++ src/*.cpp -O3 -o raytracer
+
 run:
-	g++ src/*.cpp -g -o raytracer
+	g++ src/*.cpp -O3 -o raytracer
 	./raytracer
 
-run_show:
+debug:
+	g++ src/*.cpp -g -o raytracer
+
+run_debug:
 	g++ src/*.cpp -g -o raytracer
 	./raytracer
-	python3 vis_img.py
