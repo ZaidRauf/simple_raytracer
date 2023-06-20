@@ -102,7 +102,7 @@ void ImageBuffer::write_tga(const std::string &filename){
 
     // Image Descriptor Byte
     // Least significant byte indicates we have 8 bit pixels
-    // Most significant byte bit 1 indicates image startes from top left
+    // Most significant byte bit position 1 indicates image startes from top left
     f.sputc(0b00101000);
 
     // Image ID field and Color Map data are skipped
