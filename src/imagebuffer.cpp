@@ -11,7 +11,7 @@ ImageBuffer::ImageBuffer(const float width, const float height) : image_width(wi
 }
 
 
-void ImageBuffer::SetPixel(const unsigned int x, const unsigned int y, const RGBA_Color color){
+void ImageBuffer::set_pixel(const unsigned int x, const unsigned int y, const RGBA_Color color){
     if(x < 0 || y < 0 || x >= image_width || y >= image_height){
         return;
     }
@@ -23,7 +23,7 @@ void ImageBuffer::SetPixel(const unsigned int x, const unsigned int y, const RGB
     return;
 }
 
-RGBA_Color ImageBuffer::GetPixel(const unsigned int x, const unsigned int y){
+RGBA_Color ImageBuffer::get_pixel(const unsigned int x, const unsigned int y){
     if(x < 0 || y < 0 || x >= image_width || y >= image_height){
         return BACKGROUND_WHITE;
     }
@@ -33,7 +33,23 @@ RGBA_Color ImageBuffer::GetPixel(const unsigned int x, const unsigned int y){
     return image_buffer.get()[image_pos];
 }
 
-void ImageBuffer::DumpBuffer(const std::string &filename){
+void ImageBuffer::dump_buffer(const std::string &filename){
+    std::ofstream file;
+    file.open(filename);
+
+    RGBA_Color *img_buf_data = image_buffer.get();
+
+    file << "Width: " << image_width << std::endl;
+    file << "Height: " << image_height << std::endl;
+
+    for(auto i = 0; i < image_width * image_height; i++){
+        file << img_buf_data[i] << std::endl;
+    }
+
+    file.close();
+}
+
+void ImageBuffer::write_tga(const std::string &filename){
     std::ofstream file;
     file.open(filename);
 

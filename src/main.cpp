@@ -133,7 +133,7 @@ int main(){
             constexpr float t_max = std::numeric_limits<float>::max();
 
             RGBA_Color computed_color = 0xFFFFFFFF;
-            computed_color = (1 << 24) | (129 << 16) | (127 << 8) | 0xFF;
+            // computed_color = (1 << 24) | (129 << 16) | (127 << 8) | 0xFF;
 
             float t_closest = std::numeric_limits<float>::max();
             const Sphere *closest_sphere = nullptr;
@@ -175,10 +175,10 @@ int main(){
                 computed_color = compute_scaled_color(computed_color, intensity);
             }
 
-            img_buf.SetPixel(x, y, computed_color);
+            img_buf.set_pixel(x, y, computed_color);
         }
     }
 
-    img_buf.DumpBuffer("img");
+    img_buf.dump_buffer("img");
     return 0;
 }

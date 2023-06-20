@@ -13,10 +13,11 @@ class ImageBuffer {
         const float image_width;
         const float image_height;
 
-        void SetPixel(const unsigned int x, const unsigned int y, const RGBA_Color color);
-        RGBA_Color GetPixel(const unsigned int x, const unsigned int y);
+        void set_pixel(const unsigned int x, const unsigned int y, const RGBA_Color color);
+        RGBA_Color get_pixel(const unsigned int x, const unsigned int y);
 
-        void DumpBuffer(const std::string &filename);
+        void dump_buffer(const std::string &filename);
+        void write_tga(const std::string &filename);
 
     private:
         std::unique_ptr<RGBA_Color[]> image_buffer;
