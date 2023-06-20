@@ -1,10 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include <memory>
 #include <fstream>
-#include <iostream>
-#include <bit>
+#include <memory>
 
 // Of form RGBA where A is assumed to be 255;
 using RGBA_Color = std::uint32_t;

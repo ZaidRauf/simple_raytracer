@@ -1,8 +1,9 @@
 #pragma once
 
-#include "linalg.h"
 #include <cstdint>
 #include <limits>
+
+#include "linalg.h"
 
 struct Sphere {
     Sphere(const Vector3 &o, const float r, const uint32_t c, const float spec_alpha, const float sphere_reflection);

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ostream>
 #include <cmath>
+#include <ostream>
 
 // Vector3 Definitions
 struct Vector3 {

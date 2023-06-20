@@ -1,8 +1,7 @@
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <vector>
-#include <algorithm>
-#include <iostream>
 
 #include "imagebuffer.h"
 #include "light.h"
