@@ -107,15 +107,15 @@ uint32_t reflective_ray_color_blend(const int depth, const Vector3 &incoming_ray
 int main(){
     // Direction is assumed to be looking down positive Z axis
     const Vector3 camera_pos = Vector3(0, 0, 0);
-    const unsigned int image_width = 1920;
-    const unsigned int image_height = 1080;
+    const unsigned int image_width = 1024;
+    const unsigned int image_height = 1024;
 
     const int viewport_zero_x = -(image_width/2);
     const int viewport_zero_y = (image_height/2);
 
     ImageBuffer img_buf{image_width, image_height};
 
-    float viewport_width = 1.77777777;
+    float viewport_width = 1;
     float viewport_height = 1;
     float viewport_z_dist = 1;
 
@@ -179,6 +179,7 @@ int main(){
         }
     }
 
-    img_buf.dump_buffer("img");
+    img_buf.write_tga("test.tga");
+
     return 0;
 }
